@@ -9,6 +9,7 @@ export default function Home() {
 		e.preventDefault();
 
 		// Call your API here
+		// @ts-ignore
 		const res = await fetch("/api/demo", {
 			method: "POST",
 			headers: {
