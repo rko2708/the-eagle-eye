@@ -1,5 +1,4 @@
 "use client";
-
 import { useState } from "react";
 
 export default function Home() {
@@ -18,8 +17,16 @@ export default function Home() {
 			body: JSON.stringify({ videoUrl }),
 		});
 
-		const data = await res.json();
-		setResponse(data.message);
+		// Display a message that the video has been sent for processing
+		setResponse("Video Sent For Processing");
+
+		// Clear the input field
+		setVideoUrl("");
+
+		// Clear the message after 500ms
+		setTimeout(() => {
+			setResponse(null);
+		}, 1000);
 	};
 
 	return (
@@ -97,7 +104,7 @@ export default function Home() {
 
 					{/* Response Display */}
 					{response && (
-						<div className="mt-6 p-4 bg-green-900 bg-opacity-20 text-green-300 rounded-lg">
+						<div className="mt-6 p-4 bg-green-800 bg-opacity-30 text-white rounded-lg border border-green-500 shadow-lg text-center text-lg font-semibold">
 							{response}
 						</div>
 					)}
