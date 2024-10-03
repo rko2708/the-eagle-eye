@@ -1,32 +1,34 @@
 "use client";
+
 import { useState } from "react";
 
 export default function Home() {
 	const [videoUrl, setVideoUrl] = useState("");
 	const [response, setResponse] = useState<string | null>(null);
+	const [loading, setLoading] = useState(false);
 
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
 
 		// Call your API here
-		await fetch("/api/demo", {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-			},
-			body: JSON.stringify({ videoUrl }),
-		});
+		setLoading(true);
+		const resp = await fetch(
+			"https://idx-the-eagle-eyegit-6962484-3os6jp4s5q-uc.a.run.app/generate",
+			{
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({
+					url: videoUrl,
+					location: "Helios Business Park, Bangalore",
+				}),
+			}
+		);
+		const data = await resp.json();
+		setLoading(false);
 
-		// Display a message that the video has been sent for processing
-		setResponse("Video Sent For Processing");
-
-		// Clear the input field
-		setVideoUrl("");
-
-		// Clear the message after 500ms
-		setTimeout(() => {
-			setResponse(null);
-		}, 1000);
+		setResponse(data?.prompt_response?.[1]);
 	};
 
 	return (
@@ -82,6 +84,7 @@ export default function Home() {
 					<h2 className="text-3xl font-semibold text-center text-green-500 tracking-widest mb-6">
 						See a Demo
 					</h2>
+
 					<form
 						onSubmit={handleSubmit}
 						className="mt-4 flex flex-col space-y-4"
@@ -94,12 +97,18 @@ export default function Home() {
 							onChange={(e) => setVideoUrl(e.target.value)}
 							required
 						/>
-						<button
-							type="submit"
-							className="bg-green-500 text-white py-3 rounded-lg shadow-md hover:bg-green-600 transition-all duration-300"
-						>
-							Submit
-						</button>
+						{loading ? (
+							<div className="flex justify-center">
+								<div className="loader ease-linear rounded-full border-8 border-t-8 border-gray-200 h-12 w-12"></div>
+							</div>
+						) : (
+							<button
+								type="submit"
+								className="bg-green-500 text-white py-3 rounded-lg shadow-md hover:bg-green-600 transition-all duration-300"
+							>
+								Submit
+							</button>
+						)}
 					</form>
 
 					{/* Response Display */}
